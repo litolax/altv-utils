@@ -1,23 +1,22 @@
 #!/usr/bin/env node
-const chalk = require('chalk');
-const prompts = require('prompts');
+import chalk from 'chalk';
+import prompts from 'prompts';
+import resourceNameImporter from './resourceNameImporter.js';
 
-const resourceNameImporter = require('./resourceNameImporter.js');
+console.log(chalk.greenBright('┌────────────────────┐'));
+console.log(chalk.greenBright('│     altv-utils     │'));
+console.log(chalk.greenBright('└────────────────────┘'));
 
 const args = process.argv;
 
 for (let i = 0; i < args.length; i++) {
 	if (args[i] === 'rni') {
-		resourceNameImporter.start();
-		return;
+		resourceNameImporter();
+		finish();
 	}
 }
 
 async function start() {
-	console.log(chalk.greenBright('┌────────────────────┐'));
-	console.log(chalk.greenBright('│     altv-utils     │'));
-	console.log(chalk.greenBright('└────────────────────┘'));
-
 	const response = await prompts([
 		{
 			type: 'select',
@@ -29,12 +28,18 @@ async function start() {
 	]);
 
 	if (response.util === 'rni') {
-		resourceNameImporter.start();
+		resourceNameImporter();
 	}
 
+	finish();
+}
+
+function finish() {
 	console.log(chalk.greenBright('┌────────────────────┐'));
 	console.log(chalk.greenBright('│      finished      │'));
 	console.log(chalk.greenBright('└────────────────────┘'));
+
+	process.exit(0);
 }
 
 start();

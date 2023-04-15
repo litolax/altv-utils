@@ -1,12 +1,13 @@
-const chalk = require('chalk');
-const fs = require('fs');
-const TOML = require('@iarna/toml');
+import chalk from 'chalk';
+import fs from 'fs';
+import TOML from '@iarna/toml';
 
 const rootPath = process.cwd();
+
 const noSpecialCharactersRegex = /^[^!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]*$/;
 const noNumbersRegex = /[^0-9]/;
 
-function start() {
+export default function resourceNameImporter() {
 	console.log(chalk.greenBright('| Resource-Name-Importer started |'));
 
 	let tomlPath = rootPath.concat('/server.toml');
@@ -18,7 +19,8 @@ function start() {
 				'- server.toml file was not found, please run this util from root server directory'
 			)
 		);
-		process.exit(0);
+
+		return;
 	}
 
 	if (!fs.existsSync(resourcesPath)) {
@@ -27,7 +29,8 @@ function start() {
 				'- resources folder was not found, please run this util from root server directory'
 			)
 		);
-		process.exit(0);
+
+		return;
 	}
 
 	console.log(chalk.cyan('- server.toml file found'));
@@ -56,7 +59,3 @@ function start() {
 	console.log(chalk.cyan('- server.toml was successfully modifed'));
 	console.log(chalk.greenBright('| Resource-Name-Importer finished |'));
 }
-
-module.exports = {
-	start
-};
