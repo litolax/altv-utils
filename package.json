@@ -4,7 +4,7 @@
   "main": "bin/index.js",
   "author": "litolax",
   "license": "ISC",
-  "description": "",
+  "description": "altv-utils is a cli tool that can help with the daily routine of developers",
   "bin": {
     "altv-utils": "bin/altv-utils.js"
   },
