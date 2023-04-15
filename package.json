@@ -1,0 +1,40 @@
+{
+  "name": "altv-utils",
+  "version": "0.0.1",
+  "main": "bin/index.js",
+  "author": "litolax",
+  "license": "ISC",
+  "description": "",
+  "bin": {
+    "altv-utils": "bin/altv-utils.js"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "axios": "^0.26.1",
+    "chalk": "^4.1.0",
+    "prompts": "^2.4.2"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "arrowParens": "avoid",
+    "semi": true,
+    "trailingComma": "none",
+    "useTabs": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Litolax/altv-utils.git"
+  },
+  "keywords": [
+    "altv",
+    "cli",
+    "tool",
+    "alt:V"
+  ],
+  "bugs": {
+    "url": "https://github.com/Litolax/altv-utils/issues"
+  },
+  "homepage": "https://github.com/Litolax/altv-utils#readme"
+}
