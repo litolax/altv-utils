@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+#!/usr/bin/env node
 const chalk = require('chalk');
 const prompts = require('prompts');
 
@@ -14,7 +13,7 @@ for (let i = 0; i < args.length; i++) {
 	}
 }
 
-(async () => {
+async function start() {
 	console.log(chalk.greenBright('┌────────────────────┐'));
 	console.log(chalk.greenBright('│     altv-utils     │'));
 	console.log(chalk.greenBright('└────────────────────┘'));
@@ -36,4 +35,6 @@ for (let i = 0; i < args.length; i++) {
 	console.log(chalk.greenBright('┌────────────────────┐'));
 	console.log(chalk.greenBright('│      finished      │'));
 	console.log(chalk.greenBright('└────────────────────┘'));
-})();
+}
+
+start();
