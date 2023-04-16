@@ -12,8 +12,8 @@ export default async function starter() {
 	console.log(chalk.greenBright('| alt:V starter |'));
 
 	const prevPath = path.join(__dirname, 'last.json');
-	const prev = JSON.parse(fs.readFileSync(prevPath));
 	if (!fs.existsSync(prevPath)) fs.writeFileSync(prevPath, '{}');
+	const prev = JSON.parse(fs.readFileSync(prevPath));
 	let altvPath = prev.altvPath;
 
 	if (!fs.existsSync(altvPath)) {
