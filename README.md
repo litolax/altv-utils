@@ -1,6 +1,8 @@
-# altv-tools
+# altv-utils
 
 [![npm version](https://badge.fury.io/js/altv-utils.svg)](https://badge.fury.io/js/altv-utils)
+
+![](https://i.imgur.com/ibjmgyu.png)
 
 `altv-utils` is a cli package that contains tools for optimization daily routine of developers
 
