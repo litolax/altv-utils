@@ -41,9 +41,9 @@ export default async function starter() {
 			message: 'Select branch',
 			hint: ' ',
 			choices: [
-				{ name: 'Release', value: 'release' },
-				{ name: 'Release Candidate', value: 'rc' },
-				{ name: 'Development', value: 'dev' }
+				{ title: 'Release', value: 'release' },
+				{ title: 'Release Candidate', value: 'rc' },
+				{ title: 'Development', value: 'dev' }
 			],
 			initial: branches[prev.branch] ?? 0
 		},
