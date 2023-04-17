@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import prompts from 'prompts';
 import resourceNameImporter from './resourceNameImporter.js';
 import starter from './starter.js';
+import resourceCreator from './resourceCreator.js';
 
 console.log(chalk.greenBright('┌────────────────────┐'));
 console.log(chalk.greenBright('│     altv-utils     │'));
@@ -21,6 +22,11 @@ async function start() {
 			await starter();
 			finish();
 		}
+
+		if (args[i] === 'rc') {
+			await resourceCreator();
+			finish();
+		}
 	}
 
 	const response = await prompts([
@@ -37,6 +43,10 @@ async function start() {
 				{
 					title: 'alt:V Starter',
 					value: 'starter'
+				},
+				{
+					title: 'Resource-Creator',
+					value: 'rc'
 				}
 			]
 		}
@@ -49,6 +59,10 @@ async function start() {
 		}
 		case 'starter': {
 			await starter();
+			break;
+		}
+		case 'rc': {
+			await resourceCreator();
 			break;
 		}
 	}
