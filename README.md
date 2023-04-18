@@ -1,6 +1,9 @@
 # altv-utils
 
-[![npm version](https://badge.fury.io/js/altv-utils.svg)](https://badge.fury.io/js/altv-utils)
+[![NPM Version](https://img.shields.io/npm/v/altv-utils.svg)](https://www.npmjs.com/package/altv-utils)
+[![NPM Downloads](https://img.shields.io/npm/dt/altv-utils.svg)](https://www.npmjs.com/package/altv-utils)
+[![Contributors](https://img.shields.io/github/contributors/litolax/altv-utils.svg)](https://github.com/litolax/altv-utils/graphs/contributors)
+[![Commit](https://img.shields.io/github/last-commit/litolax/altv-utils.svg)](https://github.com/litolax/altv-utils/commits/master)
 
 `altv-utils` is a cli package that contains tools for optimization daily routine of developers
 
