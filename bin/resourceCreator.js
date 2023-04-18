@@ -1,7 +1,8 @@
 import chalk from 'chalk';
-import fs from 'fs';
+import fs from 'fs-extra';
 import prompts from 'prompts';
 import axios from 'axios';
+import path from 'path';
 
 const rootPath = process.cwd();
 
@@ -32,7 +33,7 @@ export default async function resourceCreator() {
 	let resourceType = response.type;
 	if (!resourceType) return;
 
-	let installationPath;
+	let installationPath = rootPath;
 
 	if (!response.installHere) {
 		const response = await prompts({
@@ -54,12 +55,16 @@ export default async function resourceCreator() {
 
 			files.forEach(file => {
 				for (const [key, value] of Object.entries(file)) {
-					createDirectoriesByPath(`./${key}`);
-					fs.appendFileSync(`./${key}`, value);
+					fs.outputFileSync(path.join(installationPath, key), value);
 				}
 			});
 
-			//todo path + log
+			console.log(chalk.cyan('JS resource files was successfully installed'));
+			break;
+		}
+		default: {
+			console.log(chalk.yellow('This is not implemented yet'));
+			break;
 		}
 
 		//todo implement other types
@@ -99,15 +104,4 @@ const getJsResourceFiles = async () => {
 		});
 
 	return files;
-};
-
-const createDirectoriesByPath = path => {
-	const dirs = path.split('/').slice(0, -1);
-	dirs.reduce((parentDir, currentDir) => {
-		const newDir = `${parentDir}/${currentDir}`;
-		if (!fs.existsSync(newDir)) {
-			fs.mkdirSync(newDir);
-		}
-		return newDir;
-	}, '.');
 };
