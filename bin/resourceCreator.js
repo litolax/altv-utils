@@ -53,22 +53,27 @@ export default async function resourceCreator() {
 			files = await getJsResourceFiles();
 			if (!files) return;
 
-			files.forEach(file => {
-				for (const [key, value] of Object.entries(file)) {
-					fs.outputFileSync(path.join(installationPath, key), value);
-				}
-			});
+			console.log(chalk.cyan('JS resource files was successfully downloaded'));
+			break;
+		}
+		case 'ts': {
+			files = await getTsResourceFiles();
+			if (!files) return;
 
-			console.log(chalk.cyan('JS resource files was successfully installed'));
+			console.log(chalk.cyan('TS resource files was successfully downloaded'));
 			break;
 		}
 		default: {
 			console.log(chalk.yellow('This is not implemented yet'));
 			break;
 		}
-
-		//todo implement other types
 	}
+
+	files.forEach(file => {
+		for (const [key, value] of Object.entries(file)) {
+			fs.outputFileSync(path.join(installationPath, key), value);
+		}
+	});
 
 	console.log(chalk.greenBright('| Resource-Creator finished |'));
 }
@@ -98,6 +103,61 @@ const getJsResourceFiles = async () => {
 				files.push({ 'client/main.js': response3.data });
 				files.push({ 'client/ui/index.html': response4.data });
 			})
+		)
+		.catch(error => {
+			console.log(chalk.red(error));
+		});
+
+	return files;
+};
+
+const getTsResourceFiles = async () => {
+	let files = [];
+
+	await axios
+		.all([
+			axios.get(
+				'https://raw.githubusercontent.com/xxshady/altv-xts-boilerplate/main/src/resource.toml'
+			),
+			axios.get(
+				'https://raw.githubusercontent.com/xxshady/altv-xts-boilerplate/main/src/server/main.ts'
+			),
+			axios.get(
+				'https://raw.githubusercontent.com/xxshady/altv-xts-boilerplate/main/src/server/tsconfig.json'
+			),
+			axios.get(
+				'https://raw.githubusercontent.com/xxshady/altv-xts-boilerplate/main/src/client/main.ts'
+			),
+			axios.get(
+				'https://raw.githubusercontent.com/xxshady/altv-xts-boilerplate/main/src/client/tsconfig.json'
+			),
+			axios.get(
+				'https://raw.githubusercontent.com/xxshady/altv-xts-boilerplate/main/src/shared/main.ts'
+			),
+			axios.get(
+				'https://github.com/xxshady/altv-xts-boilerplate/blob/main/src/shared/tsconfig.json'
+			)
+		])
+		.then(
+			axios.spread(
+				(
+					response1,
+					response2,
+					response3,
+					response4,
+					response5,
+					response6,
+					response7
+				) => {
+					files.push({ 'resource.toml': response1.data });
+					files.push({ 'server/main.ts': response2.data });
+					files.push({ 'server/tsconfig.json': response3.data });
+					files.push({ 'client/main.ts': response4.data });
+					files.push({ 'client/tsconfig.json': response5.data });
+					files.push({ 'shared/main.ts': response6.data });
+					files.push({ 'shared/tsconfig.json': response7.data });
+				}
+			)
 		)
 		.catch(error => {
 			console.log(chalk.red(error));
