@@ -25,4 +25,5 @@ jobs:
         run: |
           VERSION=$(echo ${GITHUB_REF#refs/tags/v})
           npm --no-git-tag-version version ${VERSION}
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
           npm publish
