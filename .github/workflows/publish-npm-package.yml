@@ -3,7 +3,7 @@ name: Publish npm package
 on:
   push:
     tags:
-      - '*.*.*-release'
+      - 'v*.*.*'
 
 jobs:
   publish_npm_package:
