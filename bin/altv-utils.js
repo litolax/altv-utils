@@ -4,6 +4,7 @@ import prompts from 'prompts';
 import resourceNameImporter from './resourceNameImporter.js';
 import starter from './starter.js';
 import resourceCreator from './resourceCreator.js';
+import presetsSelector from './presetsSelector.js';
 
 console.log(chalk.greenBright('┌────────────────────┐'));
 console.log(chalk.greenBright('│     altv-utils     │'));
@@ -13,19 +14,30 @@ const args = process.argv;
 
 async function start() {
 	for (let i = 0; i < args.length; i++) {
-		if (args[i] === 'rni') {
-			resourceNameImporter();
-			finish();
-		}
+		switch (args[i]) {
+			case 'rni': {
+				resourceNameImporter();
+				break;
+			}
 
-		if (args[i] === 'starter') {
-			await starter();
-			finish();
-		}
+			case 'starter': {
+				await starter();
+				finish();
+				break;
+			}
 
-		if (args[i] === 'rc') {
-			await resourceCreator();
-			finish();
+			case 'rc': {
+				await resourceCreator();
+				finish();
+				break;
+			}
+
+			case 'ps': {
+				await presetsSelector();
+				finish();
+				break;
+			}
+			default: continue;
 		}
 	}
 
@@ -47,6 +59,10 @@ async function start() {
 				{
 					title: 'Resource-Creator',
 					value: 'rc'
+				},
+				{
+					title: 'Presets-Selector ',
+					value: 'ps'
 				}
 			]
 		}
@@ -63,6 +79,10 @@ async function start() {
 		}
 		case 'rc': {
 			await resourceCreator();
+			break;
+		}
+		case 'ps': {
+			await presetsSelector();
 			break;
 		}
 	}
