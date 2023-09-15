@@ -1,10 +1,9 @@
 import chalk from 'chalk';
 import fs from 'fs';
-import TOML from '@iarna/toml';
 import prompts from 'prompts';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { spawn } from 'child_process';
+import { startAltV } from 'starter.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -87,29 +86,11 @@ export default async function presetsSelector() {
 		}
 	}
 
-
-	let tomlPath = path.join(altvPath, './altv.toml');
-	var data = TOML.parse(fs.readFileSync(tomlPath));
-	data.debug = preset.debug;
-	data.branch = preset.branch;
-	fs.writeFileSync(tomlPath, TOML.stringify(data));
-
-	const args = [];
-	if (preset.noupdate) args.push('-noupdate');
-	if (preset.connecturl) args.push(`-connecturl altv://connect/${preset.connecturl}`);
-
-	const child = spawn(path.join(altvPath, './altv.exe'), args, {
-		detached: true,
-		stdio: ['ignore', 'ignore', 'ignore']
-	});
-
-	child.unref();
-
+	startAltV(configPath, preset, altvPath)
 	console.log(chalk.greenBright('| alt:V preset selector complete |'));
 }
 
 async function addPreset(config) {
-	const branches = { release: 0, rc: 1, dev: 2 };
 	const preset = await prompts([
 		{
 			type: 'text',

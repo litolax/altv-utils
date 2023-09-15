@@ -75,6 +75,13 @@ export default async function starter() {
 	}
 
 	fs.writeFileSync(prevPath, JSON.stringify({ ...response, altvPath }));
+	startAltV(prevPath, response, altvPath);
+	console.log(chalk.greenBright('| alt:V starter complete |'));
+}
+
+export default function startAltV(configPath, response, altvPath)
+ {
+	fs.writeFileSync(configPath, JSON.stringify({ ...response, altvPath }));
 
 	let tomlPath = path.join(altvPath, './altv.toml');
 	var data = TOML.parse(fs.readFileSync(tomlPath));
@@ -91,6 +98,4 @@ export default async function starter() {
 	});
 
 	child.unref();
-
-	console.log(chalk.greenBright('| alt:V starter complete |'));
-}
+ }
