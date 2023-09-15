@@ -3,7 +3,7 @@ import fs from 'fs';
 import prompts from 'prompts';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { startAltV } from 'starter.js';
+import { startAltV } from './starter.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
