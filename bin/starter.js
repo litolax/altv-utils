@@ -8,7 +8,7 @@ import { spawn } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default async function starter() {
+export async function starter() {
 	console.log(chalk.greenBright('| alt:V starter |'));
 
 	const prevPath = path.join(__dirname, 'last.json');
@@ -75,14 +75,12 @@ export default async function starter() {
 	}
 
 	fs.writeFileSync(prevPath, JSON.stringify({ ...response, altvPath }));
-	startAltV(prevPath, response, altvPath);
+	startAltV(response, altvPath);
 	console.log(chalk.greenBright('| alt:V starter complete |'));
 }
 
-export default function startAltV(configPath, response, altvPath)
+export function startAltV(response, altvPath)
  {
-	fs.writeFileSync(configPath, JSON.stringify({ ...response, altvPath }));
-
 	let tomlPath = path.join(altvPath, './altv.toml');
 	var data = TOML.parse(fs.readFileSync(tomlPath));
 	data.debug = response.debug;

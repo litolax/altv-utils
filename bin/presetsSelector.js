@@ -86,7 +86,7 @@ export default async function presetsSelector() {
 		}
 	}
 
-	startAltV(configPath, preset, altvPath)
+	startAltV(preset, altvPath)
 	console.log(chalk.greenBright('| alt:V preset selector complete |'));
 }
 
