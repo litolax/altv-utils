@@ -13,7 +13,7 @@ export default async function presetsSelector() {
 
 	const configPath = path.join(__dirname, 'presetsConfig.json');
 	if (!fs.existsSync(configPath)) fs.writeFileSync(configPath, '{}');
-	const config = JSON.parse(fs.readFileSync(configPath));
+	let config = JSON.parse(fs.readFileSync(configPath));
 	let altvPath = config.altvPath;
 
 	if (!fs.existsSync(altvPath)) {
@@ -27,16 +27,96 @@ export default async function presetsSelector() {
 		console.log(
 			chalk.cyan(
 				'- altVPath: ' +
-					altvPath +
-					'.\n- It will be saved and will be used on another start up.'
+				altvPath +
+				'.\n- It will be saved and will be used on another start up.'
 			)
 		);
 	}
+	
+	let preset;
+	let isSelect;
+	while (!isSelect) {
+		config = JSON.parse(fs.readFileSync(configPath));
+		const presets = config.presets ? config.presets.map(c => {return { title: `${c.presetname}`, value: c } }) : [];
 
+		const response = await prompts([
+			{
+				type: 'select',
+				name: 'preset',
+				message: 'Select, add or delete preset',
+				hint: ' ',
+				choices: [
+					...presets,
+						{ title: 'Add', value: 'add' },
+						{ title: 'Delete', value: 'delete' },
+						{ title: 'Exit', value: 'exit'}
+				],
+				initial: 0
+			}
+		])
+		switch (response.preset) {
+			case 'add':
+				{
+					let p = await addPreset(config);
+					if(!config.presets) config.presets = [];
+					config.presets.push(p);
+					writeConfig(configPath,altvPath, config.presets)
+					break;
+				}
+			case 'delete':
+				{
+					const deleteResponse = await prompts([
+						{
+							type: 'select',
+							name: 'delete',
+							message: 'Select preset to delete',
+							hint: ' ',
+							choices: presets,
+						}
+					])
+					config.presets = config.presets.filter(p => p !== deleteResponse.delete);
+					writeConfig(configPath,altvPath, config.presets)
+					break;
+				}
+			case 'exit': return;
+			default: {
+				preset = response.preset;
+				isSelect = true;
+				break;
+			}
+		}
+	}
+
+
+	let tomlPath = path.join(altvPath, './altv.toml');
+	var data = TOML.parse(fs.readFileSync(tomlPath));
+	data.debug = preset.debug;
+	data.branch = preset.branch;
+	fs.writeFileSync(tomlPath, TOML.stringify(data));
+
+	const args = [];
+	if (preset.noupdate) args.push('-noupdate');
+	if (preset.connecturl) args.push(`-connecturl altv://connect/${preset.connecturl}`);
+
+	const child = spawn(path.join(altvPath, './altv.exe'), args, {
+		detached: true,
+		stdio: ['ignore', 'ignore', 'ignore']
+	});
+
+	child.unref();
+
+	console.log(chalk.greenBright('| alt:V preset selector complete |'));
+}
+
+async function addPreset(config) {
 	const branches = { release: 0, rc: 1, dev: 2 };
-
-
-	const response = await prompts([
+	const preset = await prompts([
+		{
+			type: 'text',
+			name: 'presetname',
+			message: 'Input name for your preset',
+			hint: 'Input name'
+		},
 		{
 			type: 'select',
 			name: 'branch',
@@ -47,7 +127,7 @@ export default async function presetsSelector() {
 				{ title: 'Release Candidate', value: 'rc' },
 				{ title: 'Development', value: 'dev' }
 			],
-			initial: branches[config.branch] ?? 0
+			initial: 0
 		},
 		{
 			type: 'toggle',
@@ -55,20 +135,19 @@ export default async function presetsSelector() {
 			message: 'Enable debug mode',
 			active: 'yes',
 			inactive: 'no',
-			initial: config.debug ?? false
+			initial: false
 		},
-        {
-            type: 'text',
+		{
+			type: 'text',
 			name: 'connecturl',
 			message: 'Input url that you want to connect on start',
 			hint: 'Input url',
-            initial: config.connecturl ?? ''
-        }
+		}
 	]);
 
-	if (response.debug) {
+	if (preset.debug) {
 		Object.assign(
-			response,
+			preset,
 			await prompts([
 				{
 					type: 'toggle',
@@ -82,27 +161,10 @@ export default async function presetsSelector() {
 			])
 		);
 	}
+	return preset;
+}
 
-	fs.writeFileSync(configPath, JSON.stringify({ ...response, altvPath }));
-
-	let tomlPath = path.join(altvPath, './altv.toml');
-	var data = TOML.parse(fs.readFileSync(tomlPath));
-	data.debug = response.debug;
-	data.branch = response.branch;
-	fs.writeFileSync(tomlPath, TOML.stringify(data));
-
-	const args = [];
-	if (response.noupdate) args.push('-noupdate');
-    let connecturl = `-connecturl altv://connect/${response.connecturl}`;
-    console.log(connecturl);
-    if(response.connecturl) args.push(`--connecturl altv://connect/${response.connecturl}`);
-
-	const child = spawn(path.join(altvPath, './altv.exe'), args, {
-		detached: true,
-		stdio: ['ignore', 'ignore', 'ignore']
-	});
-
-	child.unref();
-
-	console.log(chalk.greenBright('| alt:V preset selector complete |'));
+function writeConfig(configPath, altvPath,presets)
+{
+	fs.writeFileSync(configPath, JSON.stringify({ presets, altvPath }));
 }
