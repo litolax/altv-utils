@@ -31,12 +31,12 @@ export default async function presetsSelector() {
 			)
 		);
 	}
-	
+
 	let preset;
 	let isSelect;
 	while (!isSelect) {
 		config = JSON.parse(fs.readFileSync(configPath));
-		const presets = config.presets ? config.presets.map(c => {return { title: `${c.presetname}`, value: c } }) : [];
+		const presets = config.presets ? config.presets.map(c => { return { title: `${c.presetname}`, value: c } }) : [];
 
 		const response = await prompts([
 			{
@@ -46,9 +46,10 @@ export default async function presetsSelector() {
 				hint: ' ',
 				choices: [
 					...presets,
-						{ title: 'Add', value: 'add' },
-						{ title: 'Delete', value: 'delete' },
-						{ title: 'Exit', value: 'exit'}
+					{ title: 'Add', value: 'add' },
+					{ title: 'Edit', value: 'edit'},
+					{ title: 'Delete', value: 'delete' },
+					{ title: 'Exit', value: 'exit' }
 				],
 				initial: 0
 			}
@@ -56,10 +57,10 @@ export default async function presetsSelector() {
 		switch (response.preset) {
 			case 'add':
 				{
-					let p = await addPreset(config);
-					if(!config.presets) config.presets = [];
+					let p = await presetPrompt(true);
+					if (!config.presets) config.presets = [];
 					config.presets.push(p);
-					writeConfig(configPath,altvPath, config.presets)
+					writeConfig(configPath, altvPath, config.presets)
 					break;
 				}
 			case 'delete':
@@ -69,12 +70,28 @@ export default async function presetsSelector() {
 							type: 'select',
 							name: 'delete',
 							message: 'Select preset to delete',
-							hint: ' ',
+							hint: 'Preset to delete',
 							choices: presets,
 						}
-					])
+					]);
 					config.presets = config.presets.filter(p => p !== deleteResponse.delete);
-					writeConfig(configPath,altvPath, config.presets)
+					writeConfig(configPath, altvPath, config.presets)
+					break;
+				}
+			case 'edit':
+				{
+					const editResponse = await prompts([
+						{
+							type: 'select',
+							name: 'edit',
+							message: 'Select preset to edit',
+							hint: 'Preset to edit',
+							choices: presets,
+						}
+					]);
+					let i = config.presets.indexOf(editResponse.edit);
+					config.presets[i] = await presetPrompt(true, editResponse.edit);
+					writeConfig(configPath, altvPath, config.presets)
 					break;
 				}
 			case 'exit': return;
@@ -90,13 +107,15 @@ export default async function presetsSelector() {
 	console.log(chalk.greenBright('| alt:V preset selector complete |'));
 }
 
-async function addPreset(config) {
+async function presetPrompt(isUrl, prev) {
+	const branches = { release: 0, rc: 1, dev: 2 };
 	const preset = await prompts([
 		{
 			type: 'text',
 			name: 'presetname',
 			message: 'Input name for your preset',
-			hint: 'Input name'
+			hint: 'Input name',
+			initial: prev?.presetname ?? ''
 		},
 		{
 			type: 'select',
@@ -108,7 +127,7 @@ async function addPreset(config) {
 				{ title: 'Release Candidate', value: 'rc' },
 				{ title: 'Development', value: 'dev' }
 			],
-			initial: 0
+			initial: branches[prev?.branch] ?? 0
 		},
 		{
 			type: 'toggle',
@@ -116,15 +135,22 @@ async function addPreset(config) {
 			message: 'Enable debug mode',
 			active: 'yes',
 			inactive: 'no',
-			initial: false
-		},
-		{
-			type: 'text',
-			name: 'connecturl',
-			message: 'Input url that you want to connect on start',
-			hint: 'Input url',
+			initial: prev?.debug ?? false
 		}
 	]);
+
+	if (isUrl) {
+		Object.assign(
+			preset,
+			await prompts([
+				{
+					type: 'text',
+					name: 'connecturl',
+					message: 'Input url that you want to connect on start',
+					hint: 'Input url',
+					initial: prev?.connecturl ?? ''
+				},]))
+	};
 
 	if (preset.debug) {
 		Object.assign(
@@ -137,7 +163,7 @@ async function addPreset(config) {
 					hint: '-noupdate flag',
 					active: 'yes',
 					inactive: 'no',
-					initial: config.noupdate ?? false
+					initial: prev?.noupdate ?? false
 				}
 			])
 		);
@@ -145,7 +171,6 @@ async function addPreset(config) {
 	return preset;
 }
 
-function writeConfig(configPath, altvPath,presets)
-{
+function writeConfig(configPath, altvPath, presets) {
 	fs.writeFileSync(configPath, JSON.stringify({ presets, altvPath }));
 }
