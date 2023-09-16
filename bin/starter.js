@@ -1,14 +1,12 @@
 import chalk from 'chalk';
 import fs from 'fs';
-import TOML from '@iarna/toml';
-import prompts from 'prompts';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { spawn } from 'child_process';
-
+import { presetPrompt, startAltV } from './utils.js'
+import prompts from 'prompts';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export async function starter() {
+export default async function starter() {
 	console.log(chalk.greenBright('| alt:V starter |'));
 
 	const prevPath = path.join(__dirname, 'last.json');
@@ -26,74 +24,15 @@ export async function starter() {
 		altvPath = response.altvpath;
 		console.log(
 			chalk.cyan(
-				'- altVPath: ' +
-					altvPath +
-					'.\n- It will be saved and will be used on another start up.'
+				'- altVPath: ' + altvPath +
+				'.\n- It will be saved and will be used on another start up.'
 			)
 		);
 	}
 
-	const branches = { release: 0, rc: 1, dev: 2 };
-	const response = await prompts([
-		{
-			type: 'select',
-			name: 'branch',
-			message: 'Select branch',
-			hint: ' ',
-			choices: [
-				{ title: 'Release', value: 'release' },
-				{ title: 'Release Candidate', value: 'rc' },
-				{ title: 'Development', value: 'dev' }
-			],
-			initial: branches[prev.branch] ?? 0
-		},
-		{
-			type: 'toggle',
-			name: 'debug',
-			message: 'Enable debug mode',
-			active: 'yes',
-			inactive: 'no',
-			initial: prev.debug ?? false
-		}
-	]);
-
-	if (response.debug) {
-		Object.assign(
-			response,
-			await prompts([
-				{
-					type: 'toggle',
-					name: 'noupdate',
-					message: 'Disable update',
-					hint: '-noupdate flag',
-					active: 'yes',
-					inactive: 'no',
-					initial: prev.noupdate ?? false
-				}
-			])
-		);
-	}
-
+	
+	const response = await presetPrompt(false, prev);
 	fs.writeFileSync(prevPath, JSON.stringify({ ...response, altvPath }));
 	startAltV(response, altvPath);
 	console.log(chalk.greenBright('| alt:V starter complete |'));
 }
-
-export function startAltV(response, altvPath)
- {
-	let tomlPath = path.join(altvPath, './altv.toml');
-	var data = TOML.parse(fs.readFileSync(tomlPath));
-	data.debug = response.debug;
-	data.branch = response.branch;
-	fs.writeFileSync(tomlPath, TOML.stringify(data));
-
-	const args = [];
-	if (response.noupdate) args.push('-noupdate');
-
-	const child = spawn(path.join(altvPath, './altv.exe'), args, {
-		detached: true,
-		stdio: ['ignore', 'ignore', 'ignore']
-	});
-
-	child.unref();
- }

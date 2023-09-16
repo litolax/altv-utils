@@ -2,7 +2,7 @@
 import chalk from 'chalk';
 import prompts from 'prompts';
 import resourceNameImporter from './resourceNameImporter.js';
-import { starter } from './starter.js';
+import starter from './starter.js';
 import resourceCreator from './resourceCreator.js';
 import presetsSelector from './presetsSelector.js';
 

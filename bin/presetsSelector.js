@@ -3,13 +3,11 @@ import fs from 'fs';
 import prompts from 'prompts';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { startAltV } from './starter.js';
-
+import { presetPrompt, startAltV } from './utils.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default async function presetsSelector() {
 	console.log(chalk.greenBright('| alt:V presets selector |'));
-
 	const configPath = path.join(__dirname, 'presetsConfig.json');
 	if (!fs.existsSync(configPath)) fs.writeFileSync(configPath, '{}');
 	let config = JSON.parse(fs.readFileSync(configPath));
@@ -47,7 +45,7 @@ export default async function presetsSelector() {
 				choices: [
 					...presets,
 					{ title: 'Add', value: 'add' },
-					{ title: 'Edit', value: 'edit'},
+					{ title: 'Edit', value: 'edit' },
 					{ title: 'Delete', value: 'delete' },
 					{ title: 'Exit', value: 'exit' }
 				],
@@ -105,70 +103,6 @@ export default async function presetsSelector() {
 
 	startAltV(preset, altvPath)
 	console.log(chalk.greenBright('| alt:V preset selector complete |'));
-}
-
-async function presetPrompt(isUrl, prev) {
-	const branches = { release: 0, rc: 1, dev: 2 };
-	const preset = await prompts([
-		{
-			type: 'text',
-			name: 'presetname',
-			message: 'Input name for your preset',
-			hint: 'Input name',
-			initial: prev?.presetname ?? ''
-		},
-		{
-			type: 'select',
-			name: 'branch',
-			message: 'Select branch',
-			hint: ' ',
-			choices: [
-				{ title: 'Release', value: 'release' },
-				{ title: 'Release Candidate', value: 'rc' },
-				{ title: 'Development', value: 'dev' }
-			],
-			initial: branches[prev?.branch] ?? 0
-		},
-		{
-			type: 'toggle',
-			name: 'debug',
-			message: 'Enable debug mode',
-			active: 'yes',
-			inactive: 'no',
-			initial: prev?.debug ?? false
-		}
-	]);
-
-	if (isUrl) {
-		Object.assign(
-			preset,
-			await prompts([
-				{
-					type: 'text',
-					name: 'connecturl',
-					message: 'Input url that you want to connect on start',
-					hint: 'Input url',
-					initial: prev?.connecturl ?? ''
-				},]))
-	};
-
-	if (preset.debug) {
-		Object.assign(
-			preset,
-			await prompts([
-				{
-					type: 'toggle',
-					name: 'noupdate',
-					message: 'Disable update',
-					hint: '-noupdate flag',
-					active: 'yes',
-					inactive: 'no',
-					initial: prev?.noupdate ?? false
-				}
-			])
-		);
-	}
-	return preset;
 }
 
 function writeConfig(configPath, altvPath, presets) {
