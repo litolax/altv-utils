@@ -1,4 +1,3 @@
-
 import { spawn } from 'child_process';
 import TOML from '@iarna/toml';
 import fs from 'fs';
@@ -6,7 +5,7 @@ import path from 'path';
 import prompts from 'prompts';
 
 export function startAltV(response, altvPath) {
-    let tomlPath = path.join(altvPath, './altv.toml');
+    let tomlPath = path.join(altvPath, 'altv.toml');
     var data = TOML.parse(fs.readFileSync(tomlPath));
     data.debug = response.debug;
     data.branch = response.branch;
@@ -14,12 +13,12 @@ export function startAltV(response, altvPath) {
 
     const args = [];
     if (response.noupdate) args.push('-noupdate');
-
+    args.push("-skipprocesscheck");
+    if (response.connecturl) {args.push('-connecturl'); args.push('altv://connect/' + response.connecturl);}
     const child = spawn(path.join(altvPath, './altv.exe'), args, {
         detached: true,
         stdio: ['ignore', 'ignore', 'ignore']
     });
-
     child.unref();
 }
 
@@ -58,7 +57,7 @@ export async function presetPrompt(isPreset, prev) {
                     message: 'Input url that you want to connect on start',
                     hint: 'Input url',
                     initial: prev?.connecturl ?? ''
-                }, 
+                },
                 {
                     type: 'text',
                     name: 'presetname',
