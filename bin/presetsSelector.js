@@ -35,20 +35,17 @@ export default async function presetsSelector() {
 	while (!isSelect) {
 		config = JSON.parse(fs.readFileSync(configPath));
 		const presets = config.presets ? config.presets.map(c => { return { title: `${c.presetname}`, value: c } }) : [];
-
+		let menuChoices = [
+			...presets, { title: 'Add', value: 'add' }];
+			if(presets.length > 0) menuChoices.push({ title: 'Edit', value: 'edit' }, { title: 'Delete', value: 'delete' });
+			menuChoices.push({ title: 'Exit', value: 'exit' });
 		const response = await prompts([
 			{
 				type: 'select',
 				name: 'preset',
-				message: 'Select, add or delete preset',
+				message: presets.length > 0 ? 'Select, add or delete preset' : 'Add preset or exit',
 				hint: ' ',
-				choices: [
-					...presets,
-					{ title: 'Add', value: 'add' },
-					{ title: 'Edit', value: 'edit' },
-					{ title: 'Delete', value: 'delete' },
-					{ title: 'Exit', value: 'exit' }
-				],
+				choices: menuChoices,
 				initial: 0
 			}
 		])
