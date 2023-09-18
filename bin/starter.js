@@ -15,13 +15,11 @@ export default async function starter() {
 	let altvPath = prev.altvPath;
 
 	if (!fs.existsSync(altvPath)) {
-		const response = await prompts({
+		altvPath = await prompts({
 			type: 'text',
 			name: 'altvpath',
 			message: chalk.red('- no altv.exe found, please enter alt:V path:')
-		});
-
-		altvPath = response.altvpath;
+		}).altvpath;
 		console.log(
 			chalk.cyan(
 				'- altVPath: ' + altvPath +
@@ -30,9 +28,8 @@ export default async function starter() {
 		);
 	}
 
-	
-	const response = await presetPrompt(false, prev);
-	fs.writeFileSync(prevPath, JSON.stringify({ ...response, altvPath }));
-	startAltV(response, altvPath);
+	const preset = await presetPrompt(false, prev);
+	fs.writeFileSync(prevPath, JSON.stringify({ ...preset, altvPath }));
+	startAltV(preset, altvPath);
 	console.log(chalk.greenBright('| alt:V starter complete |'));
 }
