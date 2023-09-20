@@ -3,6 +3,7 @@ import TOML from '@iarna/toml';
 import fs from 'fs';
 import path from 'path';
 import prompts from 'prompts';
+import chalk from 'chalk';
 
 export function startAltV(response, altvPath) {
     let tomlPath = path.join(altvPath, 'altv.toml');
@@ -20,6 +21,26 @@ export function startAltV(response, altvPath) {
         stdio: ['ignore', 'ignore', 'ignore']
     });
     child.unref();
+}
+
+export async function getAltVPath(prevPath)
+{
+    let altvPath = prevPath;
+	if (!fs.existsSync(altvPath)) {
+		altvPath = (await prompts({
+			type: 'text',
+			name: 'altvpath',
+			initial : '',
+			message: chalk.red('- no altv.exe found, please enter alt:V path:')
+		})).altvpath;
+		console.log(
+			chalk.cyan(
+				'- altVPath: ' + altvPath +
+				'.\n- It will be saved and will be used on another start up.'
+			)
+		);
+	}
+    return altvPath;
 }
 
 export async function presetPrompt(isPreset, prev) {
