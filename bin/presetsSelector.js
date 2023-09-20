@@ -11,7 +11,7 @@ export default async function presetsSelector() {
 	const configPath = path.join(__dirname, 'presetsConfig.json');
 	if (!fs.existsSync(configPath)) fs.writeFileSync(configPath, '{}');
 	let config = JSON.parse(fs.readFileSync(configPath));
-	let altvPath = await getAltVPath(config.path);
+	let altvPath = await getAltVPath(config.altvPath);
 	let preset;
 	let isSelect;
 	while (!isSelect) {
@@ -28,7 +28,7 @@ export default async function presetsSelector() {
 				message: presets.length > 0 ? 'Select, add or delete preset' : 'Add preset or exit',
 				hint: ' ',
 				choices: menuChoices,
-				initial: 0
+				initial: config.last ?? 0
 			}
 		])
 		switch (response.preset) {
@@ -75,6 +75,8 @@ export default async function presetsSelector() {
 			default: {
 				preset = response.preset;
 				isSelect = true;
+				config.last = config.presets.indexOf(preset);
+				fs.writeFileSync(configPath, JSON.stringify(config));
 				break;
 			}
 		}
