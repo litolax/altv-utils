@@ -3,7 +3,7 @@ import fs from 'fs';
 import prompts from 'prompts';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { presetPrompt, startAltV } from './utils.js'
+import { getAltVPath, presetPrompt, startAltV } from './utils.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default async function presetsSelector() {
@@ -11,25 +11,7 @@ export default async function presetsSelector() {
 	const configPath = path.join(__dirname, 'presetsConfig.json');
 	if (!fs.existsSync(configPath)) fs.writeFileSync(configPath, '{}');
 	let config = JSON.parse(fs.readFileSync(configPath));
-	let altvPath = config.altvPath;
-
-	if (!fs.existsSync(altvPath)) {
-		const response = await prompts({
-			type: 'text',
-			name: 'altvpath',
-			message: chalk.red('- no altv.exe found, please enter alt:V path:')
-		});
-
-		altvPath = response.altvpath;
-		console.log(
-			chalk.cyan(
-				'- altVPath: ' +
-				altvPath +
-				'.\n- It will be saved and will be used on another start up.'
-			)
-		);
-	}
-
+	let altvPath = await getAltVPath(config.altvPath);
 	let preset;
 	let isSelect;
 	while (!isSelect) {
@@ -46,7 +28,7 @@ export default async function presetsSelector() {
 				message: presets.length > 0 ? 'Select, add or delete preset' : 'Add preset or exit',
 				hint: ' ',
 				choices: menuChoices,
-				initial: 0
+				initial: config.last ?? 0
 			}
 		])
 		switch (response.preset) {
@@ -93,6 +75,8 @@ export default async function presetsSelector() {
 			default: {
 				preset = response.preset;
 				isSelect = true;
+				config.last = config.presets.indexOf(preset);
+				fs.writeFileSync(configPath, JSON.stringify(config));
 				break;
 			}
 		}
