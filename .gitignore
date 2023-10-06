@@ -130,3 +130,4 @@ dist
 .pnp.*
 bin/presetsConfig.json
 bin/last.json
+bin/.idea
