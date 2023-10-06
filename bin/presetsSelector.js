@@ -28,8 +28,8 @@ export default async function presetsSelector() {
 				'.\n- It will be saved and will be used on another start up.'
 			)
 		);
+		writeConfig(configPath, altvPath, config.presets);
 	}
-
 	let preset;
 	let isSelect;
 	while (!isSelect) {
@@ -37,8 +37,8 @@ export default async function presetsSelector() {
 		const presets = config.presets ? config.presets.map(c => { return { title: `${c.presetname}`, value: c } }) : [];
 		let menuChoices = [
 			...presets, { title: 'Add', value: 'add' }];
-			if(presets.length > 0) menuChoices.push({ title: 'Edit', value: 'edit' }, { title: 'Delete', value: 'delete' });
-			menuChoices.push({ title: 'Exit', value: 'exit' });
+		if (presets.length > 0) menuChoices.push({ title: 'Edit', value: 'edit' }, { title: 'Delete', value: 'delete' });
+		menuChoices.push({ title: 'Exit', value: 'exit' });
 		const response = await prompts([
 			{
 				type: 'select',
