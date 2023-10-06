@@ -48,8 +48,8 @@ export async function getAltVPath(prevPath) {
             '- altVPath: ' + altvPath +
             '.\n- It will be saved and will be used on another start up.'
         )
-    )
-        ; return altvPath;
+    );
+    return altvPath;
 }
 
 
