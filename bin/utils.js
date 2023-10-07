@@ -15,7 +15,13 @@ export function startAltV(response, altvPath) {
     const args = [];
     if (response.noupdate) args.push('-noupdate');
     args.push("-skipprocesscheck");
-    if (response.connecturl) { args.push('-connecturl'); args.push('altv://connect/' + response.connecturl); }
+    if (response.connecturl) {
+        args.push('-connecturl');
+        if (response.password) {
+            response.connecturl += '?password=' + response.password;
+        }
+        args.push('altv://connect/' + response.connecturl);
+    }
     const child = spawn(path.join(altvPath, './altv.exe'), args, {
         detached: true,
         stdio: ['ignore', 'ignore', 'ignore']
@@ -42,8 +48,8 @@ export async function getAltVPath(prevPath) {
             '- altVPath: ' + altvPath +
             '.\n- It will be saved and will be used on another start up.'
         )
-    )
-        ; return altvPath;
+    );
+    return altvPath;
 }
 
 
@@ -82,6 +88,13 @@ export async function presetPrompt(isPreset, prev) {
                     message: 'Input url that you want to connect on start',
                     hint: 'Input url',
                     initial: prev?.connecturl ?? ''
+                },
+                {
+                    type: 'text',
+                    name: 'password',
+                    message: 'Input password for your server',
+                    hint: 'Input server password',
+                    initial: prev?.password ?? ''
                 },
                 {
                     type: 'text',
