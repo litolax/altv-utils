@@ -6,24 +6,18 @@ on:
       - 'v*.*.*'
 
 jobs:
-  publish_npm_package:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: npm install
-      - name: Check Branch
-        run: |
-          if [ $GITHUB_REF != 'refs/heads/master' ]; then
-            echo "Not publishing from the master branch, skipping."
-            exit 0
-          fi
-      - name: Publish Package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        run: |
-          VERSION=$(echo ${GITHUB_REF#refs/tags/v})
-          npm --no-git-tag-version version ${VERSION}
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-          npm publish
+    publish-npm:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  registry-url: https://registry.npmjs.org
+            - run: npm i
+            - run: npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
