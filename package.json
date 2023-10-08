@@ -1,42 +1,42 @@
 {
-  "name": "altv-utils",
-  "version": "0.1.6",
-  "main": "bin/index.js",
-  "author": "litolax",
-  "license": "ISC",
-  "type": "module",
-  "description": "altv-utils is a cli tool that can help with the daily routine of developers",
-  "bin": {
-    "altv-utils": "bin/altv-utils.js"
-  },
-  "dependencies": {
-    "@iarna/toml": "^2.2.5",
-    "axios": "^0.26.1",
-    "chalk": "^4.1.0",
-    "fs-extra": "^11.1.1",
-    "prompts": "^2.4.2"
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "singleQuote": true,
-    "jsxSingleQuote": true,
-    "arrowParens": "avoid",
-    "semi": true,
-    "trailingComma": "none",
-    "useTabs": true
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Litolax/altv-utils.git"
-  },
-  "keywords": [
-    "altv",
-    "cli",
-    "tool",
-    "alt:V"
-  ],
-  "bugs": {
-    "url": "https://github.com/Litolax/altv-utils/issues"
-  },
-  "homepage": "https://github.com/Litolax/altv-utils#readme"
+	"name": "altv-utils",
+	"version": "0.1.7",
+	"main": "bin/index.js",
+	"author": "litolax",
+	"license": "ISC",
+	"type": "module",
+	"description": "altv-utils is a cli tool that can help with the daily routine of developers",
+	"bin": {
+		"altv-utils": "bin/altv-utils.js"
+	},
+	"dependencies": {
+		"@iarna/toml": "^2.2.5",
+		"axios": "^0.26.1",
+		"chalk": "^4.1.0",
+		"fs-extra": "^11.1.1",
+		"prompts": "^2.4.2"
+	},
+	"prettier": {
+		"tabWidth": 2,
+		"singleQuote": true,
+		"jsxSingleQuote": true,
+		"arrowParens": "avoid",
+		"semi": true,
+		"trailingComma": "none",
+		"useTabs": true
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Litolax/altv-utils.git"
+	},
+	"keywords": [
+		"altv",
+		"cli",
+		"tool",
+		"alt:V"
+	],
+	"bugs": {
+		"url": "https://github.com/Litolax/altv-utils/issues"
+	},
+	"homepage": "https://github.com/Litolax/altv-utils#readme"
 }
