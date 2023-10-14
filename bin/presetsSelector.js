@@ -3,7 +3,7 @@ import fs from 'fs';
 import prompts from 'prompts';
 import path from 'path';
 import { presetPrompt, startAltV } from './utils.js'
-const __dirname = path.join(process.env.APPDATA, "altVPresetSelector");
+const __dirname = path.join(process.env.APPDATA, "AltVPresetsSelector");
 
 
 export default async function presetsSelector() {
