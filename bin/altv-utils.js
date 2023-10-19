@@ -33,7 +33,7 @@ async function start() {
 			}
 
 			case 'ps': {
-				await presetsSelector();
+				await presetsSelector(args[i+1]);
 				finish();
 				break;
 			}
