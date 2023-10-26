@@ -14,7 +14,7 @@ export function startAltV(response, altvPath) {
 
     const args = [];
     if (response.noupdate) args.push('-noupdate');
-    args.push("-skipprocesscheck");
+    args.push("-skipprocessconfirmation");
     if (response.connecturl) {
         args.push('-connecturl');
         if (response.password) {
