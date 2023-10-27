@@ -4,6 +4,20 @@ import fs from 'fs';
 import path from 'path';
 import prompts from 'prompts';
 import chalk from 'chalk';
+const _dirname = "altVUtils";
+const __dirname = path.join(process.env.APPDATA, _dirname);
+
+export function ensureDirectoryExists() {
+    if (!fs.existsSync(__dirname)) {
+      fs.mkdir(__dirname, function (err) {
+        if (err) {
+          console.log(chalk.redBright(_dirname + " directory didn't create.",), '\n', err);
+        } else {
+          console.log(chalk.greenBright(_dirname + " directory successfully created. Path: " + __dirname));
+        }
+      });
+    }
+  }
 
 export function startAltV(response, altvPath) {
     let tomlPath = path.join(altvPath, 'altv.toml');
@@ -123,3 +137,5 @@ export async function presetPrompt(isPreset, prev) {
     }
     return preset;
 }
+
+export {_dirname};

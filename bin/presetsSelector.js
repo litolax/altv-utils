@@ -2,25 +2,14 @@ import chalk from 'chalk';
 import fs from 'fs';
 import prompts from 'prompts';
 import path from 'path';
-import { presetPrompt, startAltV } from './utils.js'
-const dirname = "AltVPresetsSelector";
-const __dirname = path.join(process.env.APPDATA, dirname);
+import { presetPrompt, startAltV, _dirname, ensureDirectoryExists } from './utils.js'
+const __dirname = path.join(process.env.APPDATA, _dirname);
 
 
 export default async function presetsSelector(presetName) {
 	console.log(chalk.greenBright('| alt:V presets selector |'));
 	const configPath = path.join(__dirname, 'presetsConfig.json');
-	if (!fs.existsSync(configPath)) {
-		fs.mkdir(__dirname, function (err) {
-			if (err) {
-				console.log(chalk.redBright(dirname + " directory didn't created.",), '\n', err);
-			} else {
-				console.log(chalk.greenBright(dirname + " directory successfully created. Path: " + __dirname));
-			}
-		});
-		fs.writeFileSync(configPath, '{}');
-	}
-
+	ensureDirectoryExists();
 	let config = JSON.parse(fs.readFileSync(configPath));
 	let altvPath = config.altvPath;
 
