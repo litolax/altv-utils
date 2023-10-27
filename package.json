@@ -1,6 +1,6 @@
 {
 	"name": "altv-utils",
-	"version": "0.1.11",
+	"version": "0.1.12",
 	"main": "bin/index.js",
 	"author": "litolax",
 	"license": "ISC",
