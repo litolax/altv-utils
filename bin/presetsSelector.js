@@ -3,7 +3,8 @@ import fs from 'fs';
 import prompts from 'prompts';
 import path from 'path';
 import { presetPrompt, startAltV } from './utils.js'
-const __dirname = path.join(process.env.APPDATA, "AltVPresetsSelector");
+const dirname = "AltVPresetsSelector";
+const __dirname = path.join(process.env.APPDATA, dirname);
 
 
 export default async function presetsSelector(presetName) {
@@ -12,9 +13,9 @@ export default async function presetsSelector(presetName) {
 	if (!fs.existsSync(configPath)) {
 		fs.mkdir(__dirname, function (err) {
 			if (err) {
-				console.log(chalk.redBright("altVPresetSelector directory didn't created.",), '\n', err);
+				console.log(chalk.redBright(dirname + " directory didn't created.",), '\n', err);
 			} else {
-				console.log(chalk.greenBright("altVPresetSelector directory successfully created. Path: " + __dirname));
+				console.log(chalk.greenBright(dirname + " directory successfully created. Path: " + __dirname));
 			}
 		});
 		fs.writeFileSync(configPath, '{}');
