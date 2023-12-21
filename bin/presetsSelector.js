@@ -10,6 +10,7 @@ export default async function presetsSelector(presetName) {
 	console.log(chalk.greenBright('| alt:V presets selector |'));
 	const configPath = path.join(__dirname, 'presetsConfig.json');
 	ensureDirectoryExists();
+	if (!fs.existsSync(configPath)) fs.writeFileSync(configPath, '{}');
 	let config = JSON.parse(fs.readFileSync(configPath));
 	let altvPath = config.altvPath;
 
