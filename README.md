@@ -15,7 +15,7 @@
 
 - Resource Name Importer (Simplifies filling resource array for server.toml)
 - Starter (Helps to adjust the alt:V configuration at startup)
-- Preset Selector (Helps to create and run alt:V by presets with start url and password)
+- Preset Selector (Helps to create and run alt:V by presets with branch, debug, start url and password)
 
 ## Installation
 
