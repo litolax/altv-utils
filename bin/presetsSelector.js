@@ -97,11 +97,7 @@ export default async function presetsSelector(presetName) {
 					}
 				case 'exit': return;
 				default: {
-					preset = response.preset;
-					isSelect = true;
-					config.last = config.presets.indexOf(preset);
-					fs.writeFileSync(configPath, JSON.stringify(config));
-					break;
+					continue;
 				}
 			}
 		}
