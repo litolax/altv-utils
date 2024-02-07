@@ -15,6 +15,7 @@
 
 - Resource Name Importer (Simplifies filling resource array for server.toml)
 - Starter (Helps to adjust the alt:V configuration at startup)
+- Preset Selector (Helps to create and run alt:V by presets with start url and password)
 
 ## Installation
 
@@ -27,10 +28,11 @@ Install altv-utils with npm
 
 ## Usage
 
-| Tool                   | Command                  | Description                                            |
-| ---------------------- | -------------------------| ------------------------------------------------------ |
-| Resource Name Importer | `npx altv-utils rni`     | Run this command on the root directory of alt:V server |
-| Starter                | `npx altv-utils starter` | -                                                      |
+| Tool                   | Command                  | Description                                                                         |
+| ---------------------- | -------------------------| ----------------------------------------------------------------------------------- |
+| Resource Name Importer | `npx altv-utils rni`     | Run this command on the root directory of alt:V server                              |
+| Starter                | `npx altv-utils starter` | -                                                                                   |
+| Preset Selector        | `npx altv-utils ps [n]`  | [n] - optional parameter, the name of the preset from which you want to start alt:V |
 
 ## Contributing
 
