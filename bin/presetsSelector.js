@@ -52,7 +52,7 @@ export default async function presetsSelector(presetName) {
 					message: presets.length > 0 ? 'Select, add or delete preset' : 'Add preset or exit',
 					hint: ' ',
 					choices: menuChoices,
-					initial: config.last ?? 0
+					initial: config.last !== -1 ? (config.last ?? 0) : 0
 				}
 			])
 			switch (response.preset) {
@@ -97,7 +97,11 @@ export default async function presetsSelector(presetName) {
 					}
 				case 'exit': return;
 				default: {
-					continue;
+					preset = response.preset;
+					isSelect = true;
+					config.last = config.presets.indexOf(preset);
+					if(config.last !== -1) fs.writeFileSync(configPath, JSON.stringify(config));
+					break;
 				}
 			}
 		}
